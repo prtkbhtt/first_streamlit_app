@@ -25,7 +25,7 @@ streamlit.header("Fruityvice Fruit Advice!")
 import requests
 fruit_choice = streamlit.text_input('What fruit would you like information about?','Kiwi')
 fruityvice_response = requests.get("https://fruityvice.com/api/fruit/" +fruit_choice)
-fruits_selected = streamlit.multiselect("Pick some fruits:", fruityvice_response)
+fruits_selected = streamlit.multiselect("Pick some fruits:", fruityvice_response.list)
 
 #streamlit.write('The user entered ', fruit_choice)
 #streamlit.text(fruityvice_response.json())
