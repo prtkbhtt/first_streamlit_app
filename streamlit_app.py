@@ -44,16 +44,28 @@ except URLError as e:
     streamlit.error()
 
 
-streamlit.stop()
 
-my_cnx = snowflake.connector.connect(**streamlit.secrets["snowflake"])
 
-my_cur = my_cnx.cursor()
-my_cur.execute("insert into fruit_load_list values ('from streamlit')")
-my_cur.execute("SELECT * from pc_rivery_db.public.fruit_load_list")
-my_data_row = my_cur.fetchall()
+#my_cnx = snowflake.connector.connect(**streamlit.secrets["snowflake"])
+
+#my_cur = my_cnx.cursor()
+#my_cur.execute("insert into fruit_load_list values ('from streamlit')")
+#my_cur.execute("SELECT * from pc_rivery_db.public.fruit_load_list")
+#my_data_row = my_cur.fetchall()
+
 streamlit.header("The fruit load list contains:")
-streamlit.dataframe(my_data_row)
+def get_fruit_list():
+  with my_cnx.cursor() as my_cur:
+       my_cur.execute("select * from pc_rivery_db.public.fruit_load_list")
+       return my_cur.fetchall
+      
+if streamlit.button('Get Fruit Load List'):
+   my_cnx = snowflake.connector.connect(**streamlit.secrets["snowflake"])
+   my_data_rows = get_fruit_list()
+   streamlit.dataframe(my_data_rows)
+      
+streamlit.stop()      
+#streamlit.dataframe(my_data_row)
 
 fruit_ads = streamlit.text_input('what fruit would like to add?','jackfruit')
 fruit_add_response = requests.get("https://fruityvice.com/api/fruit/" +fruit_ads)
